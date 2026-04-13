@@ -7,7 +7,7 @@ spring:
 
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:firebase-service-account.json}
-  project-id: ${FIREBASE_PROJECT_ID:your-firebase-project-id}
+  project-id: studyforge-8d9b6
 
 management:
   endpoints:
