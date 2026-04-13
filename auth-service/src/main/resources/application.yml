@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+
+firebase:
+  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:firebase-service-account.json}
+  project-id: ${FIREBASE_PROJECT_ID:your-firebase-project-id}
+
+jwt:
+  secret: ${JWT_SECRET:bookstore-super-secret-jwt-key-minimum-256-bits-long-for-hs256-algorithm}
+  access-token-expiry-seconds: ${JWT_ACCESS_EXPIRY:3600}
+  refresh-token-expiry-seconds: ${JWT_REFRESH_EXPIRY:604800}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+logging:
+  level:
+    com.bookstore: DEBUG

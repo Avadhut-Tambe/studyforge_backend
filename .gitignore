@@ -1,0 +1,33 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+.eclipse
+.project
+.classpath
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Logs
+*.log
+logs/
+
+# Firebase service account — NEVER commit real credentials
+**/firebase-service-account.json
+
+# Environment
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db

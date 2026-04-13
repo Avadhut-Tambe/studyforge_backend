@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Auth Service
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=0
+
+        # User Service
+        - id: user-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - StripPrefix=0
+
+        # Book Service
+        - id: book-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/books/**, /api/categories/**, /api/reviews/**
+          filters:
+            - StripPrefix=0
+
+        # Order Service
+        - id: order-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/orders/**, /api/cart/**, /api/wishlist/**
+          filters:
+            - StripPrefix=0
+
+        # Payment Service
+        - id: payment-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - StripPrefix=0
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: "http://localhost:3000,http://localhost:5173"
+            allowedMethods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+# JWT secret — must match all services. Set via environment variable in production.
+jwt:
+  secret: ${JWT_SECRET:bookstore-super-secret-jwt-key-minimum-256-bits-long-for-hs256-algorithm}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.bookstore: DEBUG

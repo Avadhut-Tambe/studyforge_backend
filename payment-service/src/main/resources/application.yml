@@ -1,0 +1,24 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: payment-service
+
+firebase:
+  service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:firebase-service-account.json}
+  project-id: ${FIREBASE_PROJECT_ID:your-firebase-project-id}
+
+payment:
+  mock:
+    failure-rate: ${PAYMENT_FAILURE_RATE:0.1}
+    delay-ms: ${PAYMENT_DELAY_MS:1500}
+
+services:
+  order-service-url: ${ORDER_SERVICE_URL:http://localhost:8084}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
