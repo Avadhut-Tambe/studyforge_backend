@@ -17,7 +17,8 @@ const BASE = 'http://localhost:8080'
 const api  = axios.create({ baseURL: BASE })
 
 // ─── Firebase Admin Init ──────────────────────────────────────────────────────
-const SA_PATH = path.join(__dirname, '../bookstore-backend/auth-service/src/main/resources/firebase-service-account.json')
+const SA_PATH = process.env.FIREBASE_SERVICE_ACCOUNT_PATH
+  || path.join(__dirname, '../auth-service/firebase-service-account.json')
 const serviceAccount = JSON.parse(fs.readFileSync(SA_PATH, 'utf8'))
 
 admin.initializeApp({
