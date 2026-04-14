@@ -48,13 +48,6 @@ spring:
           filters:
             - StripPrefix=0
 
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOriginPatterns: "http://localhost:3000,http://localhost:5173"
-            allowedMethods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
-            allowedHeaders: "*"
-            allowCredentials: true
 
 # JWT secret — must match all services. Set via environment variable in production.
 jwt:

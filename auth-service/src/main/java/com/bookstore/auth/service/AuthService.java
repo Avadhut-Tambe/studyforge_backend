@@ -1,6 +1,7 @@
 package com.bookstore.auth.service;
 
 import com.bookstore.auth.dto.AuthResponse;
+import com.bookstore.auth.dto.DemoLoginRequest;
 import com.bookstore.auth.dto.LoginRequest;
 import com.bookstore.auth.dto.RegisterRequest;
 import com.bookstore.auth.exception.AuthException;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -99,6 +101,36 @@ public class AuthService {
             .orElseThrow(() -> new AuthException("User not found"));
 
         return buildAuthResponse(user);
+    }
+
+    // Hardcoded demo accounts — no Firestore, always available for local testing.
+    private static final Map<String, User> DEMO_USERS = Map.of(
+        "BUYER", User.builder()
+            .id("demo-buyer-001").email("demo@buyer.com").name("Demo Buyer")
+            .role(User.Role.BUYER).status(User.Status.ACTIVE)
+            .createdAt(Instant.EPOCH).updatedAt(Instant.EPOCH).build(),
+        "SELLER", User.builder()
+            .id("demo-seller-001").email("demo@seller.com").name("Demo Seller")
+            .role(User.Role.SELLER).status(User.Status.ACTIVE)
+            .createdAt(Instant.EPOCH).updatedAt(Instant.EPOCH).build(),
+        "ADMIN", User.builder()
+            .id("demo-admin-001").email("demo@admin.com").name("Demo Admin")
+            .role(User.Role.ADMIN).status(User.Status.ACTIVE)
+            .createdAt(Instant.EPOCH).updatedAt(Instant.EPOCH).build()
+    );
+
+    /**
+     * Returns a real JWT for a hardcoded demo user.
+     * No Firestore access — safe to call without any registered users.
+     */
+    public AuthResponse demoLogin(DemoLoginRequest request) {
+        String role = request.getRole().toUpperCase();
+        User demoUser = DEMO_USERS.get(role);
+        if (demoUser == null) {
+            throw new AuthException("Invalid demo role. Allowed: BUYER, SELLER, ADMIN");
+        }
+        log.info("Demo login as {}", role);
+        return buildAuthResponse(demoUser);
     }
 
     private AuthResponse buildAuthResponse(User user) {

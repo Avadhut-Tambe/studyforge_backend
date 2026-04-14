@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.springframework.http.HttpMethod;
 
 /**
  * Global JWT Authentication Filter.
@@ -30,12 +31,13 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     private String jwtSecret;
 
     // Endpoints that do NOT require authentication
+    // NOTE: /api/books GET is handled separately in isPublicPath() — do NOT add it here
+    // because anyMatch(path::startsWith) would make ALL /api/books/* methods public.
     private static final List<String> PUBLIC_PATHS = List.of(
         "/api/auth/login",
         "/api/auth/register",
         "/api/auth/refresh",
-        "/api/books",          // GET book list is public
-        "/api/books/search",
+        "/api/auth/demo-login",
         "/actuator"
     );
 
@@ -43,6 +45,13 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getPath().value();
+
+        // Always pass CORS preflight requests through — the gateway's CorsGlobalFilter
+        // handles them; the JWT filter must not block them (no Authorization header is
+        // sent with preflight requests by the browser).
+        if (HttpMethod.OPTIONS.equals(request.getMethod())) {
+            return chain.filter(exchange);
+        }
 
         // Allow public paths through without token
         if (isPublicPath(path, request.getMethod().name())) {

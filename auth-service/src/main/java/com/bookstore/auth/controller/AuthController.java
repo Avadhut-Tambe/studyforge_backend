@@ -1,6 +1,7 @@
 package com.bookstore.auth.controller;
 
 import com.bookstore.auth.dto.AuthResponse;
+import com.bookstore.auth.dto.DemoLoginRequest;
 import com.bookstore.auth.dto.LoginRequest;
 import com.bookstore.auth.dto.RegisterRequest;
 import com.bookstore.auth.service.AuthService;
@@ -27,6 +28,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    /**
+     * Demo login — returns real JWTs for a hardcoded demo user.
+     * Body: {"role": "BUYER"} or "SELLER" or "ADMIN"
+     * No real account needed; useful for local development and frontend testing.
+     */
+    @PostMapping("/demo-login")
+    public ResponseEntity<AuthResponse> demoLogin(@Valid @RequestBody DemoLoginRequest request) {
+        return ResponseEntity.ok(authService.demoLogin(request));
     }
 
     @PostMapping("/refresh")
